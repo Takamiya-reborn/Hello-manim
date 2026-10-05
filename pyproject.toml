@@ -1,0 +1,23 @@
+[project]
+name = "hello-manim"
+version = "0.1.0"
+description = "一套以'深入原理、落到代码'为原则的 manim 数学动画教程（内含高数和线代）"
+readme = "README.md"
+authors = [
+    { name = "Takamiya-reborn", email = "2196733767@qq.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "manim>=0.19",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
+[project.scripts]
+hello-manim = "hello_manim:main"
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.13.0"]
+build-backend = "uv_build"
