@@ -26,7 +26,7 @@ import argparse
 import numpy as np
 from manim import *
 
-from hello_manim.rendering import add_render_args, render_lesson
+from hello_manim.utils.rendering import add_render_args, render_lesson
 
 
 class MobiusBand(ThreeDScene):

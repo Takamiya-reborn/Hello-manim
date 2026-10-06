@@ -1,8 +1,22 @@
-# Hello manim —— 用 Python 制作数学动画的教程
+<div align="center">
+
+# 🎬 Hello manim
+
+**用 Python 制作数学动画的教程** · 深入原理 · 落到代码
+
+[![Python](https://img.shields.io/badge/Python-3.13%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Manim](https://img.shields.io/badge/Manim-0.19%2B-FC6255?logo=manim&logoColor=white)](https://www.manim.community/)
+[![uv](https://img.shields.io/badge/uv-package%20manager-DE5FE9?logo=uv&logoColor=white)](https://docs.astral.sh/uv/)
+[![LaTeX](https://img.shields.io/badge/LaTeX-MiKTeX%20可选-008080?logo=latex&logoColor=white)](https://miktex.org/)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)](#环境准备)
+[![Calculus 图谱](https://img.shields.io/badge/calculus-课程知识图谱-2E7D32?logo=bookstack&logoColor=white)](lesson_mind/calculus-mindmap.md)
+[![Linalg 图谱](https://img.shields.io/badge/linalg-课程知识图谱-1565C0?logo=bookstack&logoColor=white)](lesson_mind/linalg-mindmap.md)
 
 一套以"深入原理、落到代码"为原则的 manim 教程，分三个系列：
 **base** 讲 manim 库本身怎么用；**calculus**（高等数学）与 **linalg**（线性代数）
 是面向大学生的专项实战——动画讲的是数学本身，manim 是载体。
+
+</div>
 
 ## 课程总览
 
@@ -19,33 +33,39 @@
 | [07](src/hello_manim/base/07.py) | 相机与 3D    | phi/theta 机位；环境旋转；Surface 把参数方程采样成网格面                |
 | [08](src/hello_manim/base/08.py) | 工程化       | 工厂函数集中样式；自定义 Animation 保持幂等；partial movie file 缓存    |
 
-### calculus —— 高等数学专项（大学完整课程）
+### calculus —— 微积分：把变化"拆开"与"加回"（重构中，文案已就绪）
 
-| 课                                   | 主题             | 可视化亮点                                        |
-| ------------------------------------ | ---------------- | ------------------------------------------------- |
-| [01](src/hello_manim/calculus/01.py) | 函数与极限       | 数列点列收敛；ε-δ 带联动；无穷小阶的快慢对比      |
-| [02](src/hello_manim/calculus/02.py) | 重要极限与连续性 | (1+1/n)ⁿ 逼近 e；单位圆夹逼证 sin x/x；三类间断点 |
-| [03](src/hello_manim/calculus/03.py) | 导数             | 割线滑向切线；导函数是"斜率函数"；链式法则分色    |
-| [04](src/hello_manim/calculus/04.py) | 中值定理与应用   | 罗尔水平切线；拉格朗日割线平移；单调区间与洛必达  |
-| [05](src/hello_manim/calculus/05.py) | 不定积分         | 原函数族平移；凑微分的颜色对应；分部积分逐步推导  |
-| [06](src/hello_manim/calculus/06.py) | 定积分           | 黎曼矩形收敛；变上限积分同步生长；圆盘法体积      |
-| [07](src/hello_manim/calculus/07.py) | 微分方程         | 斜率场贴合解曲线；积分因子；三种阻尼解曲线对比    |
-| [08](src/hello_manim/calculus/08.py) | 多元函数微分学   | 3D 曲面切片求偏导；切平面近似；梯度垂直等高线     |
-| [09](src/hello_manim/calculus/09.py) | 二重积分         | 曲顶柱体；扫描条带做累次积分；极坐标 dA=r dr dθ   |
-| [10](src/hello_manim/calculus/10.py) | 无穷级数         | 正方形对分拼 1；判别法卡片；泰勒多项式逐阶贴合    |
+旧版 35 课已整体下线，新版按 [lesson_mind/calculus-mindmap.md](lesson_mind/calculus-mindmap.md)
+的 8 个 Episode 重建，一集一课。总故事线不变：微分与积分互为逆运算，
+地基是实数完备性，安全边界是一致收敛，高维世界同一套动作重演，
+最后把这套语言推远到变换、复数与微分形式：
 
-### linalg —— 线性代数专项（大学完整课程，几何优先）
+| 课  | 主题                                    |
+| --- | --------------------------------------- |
+| 01  | 从"靠近"开始——函数、极限与连续          |
+| 02  | 把变化放大——导数、微分与局部线性        |
+| 03  | 把变化累积回来——原函数、积分与面积      |
+| 04  | 让方程自己运动——常微分方程              |
+| 05  | 从平面走向空间——多元函数与局部结构      |
+| 06  | 沿着曲线和曲面走——向量分析              |
+| 07  | 用无限叠加逼近函数——级数与 Fourier 展开 |
+| 08  | 延伸——把微积分的语言继续推远            |
 
-| 课                                 | 主题               | 可视化亮点                                      |
-| ---------------------------------- | ------------------ | ----------------------------------------------- |
-| [01](src/hello_manim/linalg/01.py) | 向量与线性组合     | 首尾相接加法；标量滑动的组合；张成空间塌缩      |
-| [02](src/hello_manim/linalg/02.py) | 矩阵即线性变换     | 网格整体变形；列 = 基向量落点；基变换           |
-| [03](src/hello_manim/linalg/03.py) | 矩阵乘法           | 两步复合 vs 一步；AB≠BA 的网格对比              |
-| [04](src/hello_manim/linalg/04.py) | 行列式             | 正方形变平行四边形；压扁到直线；定向翻转        |
-| [05](src/hello_manim/linalg/05.py) | 逆、列空间与秩     | 逆 = 撤销变换；落点被压到直线；核收缩到原点     |
-| [06](src/hello_manim/linalg/06.py) | 方程组与高斯消元   | 解 = 直线交点；增广矩阵逐步消元；三种解的情形   |
-| [07](src/hello_manim/linalg/07.py) | 点积、叉积与正交化 | 投影图解；平行四边形面积；Gram-Schmidt 逐步     |
-| [08](src/hello_manim/linalg/08.py) | 特征值与特征向量   | 不变方向的向量；旋转无实特征值；对角化 = 纯缩放 |
+### linalg —— 线性代数专项（重构中：Episode01 已就位）
+
+旧版 8 课已整体下线，新版按 [lesson_mind/linalg-mindmap.md](lesson_mind/linalg-mindmap.md)
+的 6 个 Episode 重建，叙事从"行列式在方程组里长出来"开始，而不是从定义开始。
+一集成一条视频：每集一个目录 `episodeNN/`（intro + act01..actNN + main.py），
+`main.py` 定义幕顺序，逐幕渲染后用 PyAV 无损拼接成单集 mp4：
+
+| 集  | 主题                             | 状态      |
+| --- | -------------------------------- | --------- |
+| 01  | 从线性方程组生长出来的行列式     | ✅ 已完成 |
+| 02  | 线性变换的本身——矩阵             | 待建      |
+| 03  | 被变换的对象——向量               | 待建      |
+| 04  | 线性方程组——从消元到结构         | 待建      |
+| 05  | 特征值与特征向量——寻找变换的骨架 | 待建      |
+| 06  | 二次型——把几何形状写成代数       | 待建      |
 
 学习路线建议：先把 base 01–08 读完建立 manim 世界观（静态物体 → 时间维 →
 数学表达 → 空间维 → 工程），再按需进入专项系列。专项课的注释里同时讲
@@ -54,19 +74,9 @@
 
 ## 环境准备
 
-需要 [uv](https://docs.astral.sh/uv/) 和 Python 3.13+。安装 uv：
+需要 [uv](https://docs.astral.sh/uv/) 和 Python 3.13+。
 
-```powershell
-# Windows (PowerShell)
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-```bash
-# macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-然后安装依赖：
+安装依赖：
 
 ```bash
 uv sync
@@ -95,8 +105,14 @@ uv run hello-manim base 01
 # 高等数学第 3 课：提高质量，渲完自动用系统播放器打开
 uv run hello-manim calculus 03 --quality medium --preview
 
-# 线性代数第 8 课；编号可以简写，"8" 会自动补齐成 "08"
-uv run hello-manim linalg 8
+# 线性代数 Episode01：一集一目录，多幕渲染后自动拼接成单集（1080p30 成片）
+uv run hello-manim linalg 1 --quality high
+
+# 只重渲其中一幕再重新拼接，其余片段沿用缓存
+uv run hello-manim linalg 1 --only act03
+
+# 线性代数第 2 课（尚未就位会得到提示）；编号可以简写，"2" 会自动补齐成 "02"
+uv run hello-manim linalg 2
 
 # 只给编号、不给系列名时，默认属于 base 系列（向后兼容）
 uv run hello-manim 01
@@ -106,42 +122,49 @@ uv run hello-manim 01
 
 所有课程共用同一组渲染参数：
 
-| 参数               | 说明                               |
-| ------------------ | ---------------------------------- |
-| `--quality low`    | 480p15，默认，最快，适合学习迭代   |
-| `--quality medium` | 720p30                             |
-| `--quality high`   | 1080p60，成片用                    |
-| `--preview`        | 渲染完成后用系统默认播放器打开视频 |
+| 参数               | 说明                                     |
+| ------------------ | ---------------------------------------- |
+| `--quality low`    | 480p15，默认，最快，适合学习迭代         |
+| `--quality medium` | 720p30                                   |
+| `--quality high`   | 1080p60，成片用（linalg 剧集为 1080p30） |
+| `--preview`        | 渲染完成后用系统默认播放器打开视频       |
 
 ### 其他运行方式
 
 每课文件也可以独立运行（两种入口共用同一个 `main()`）：
 
 ```bash
-uv run python src/hello_manim/calculus/03.py
+uv run python src/hello_manim/base/01.py
+```
+
+linalg 的剧集入口支持只重渲某一幕后重新拼接：
+
+```bash
+uv run python -m hello_manim.linalg.episode01.main --quality high --only act03
 ```
 
 也可以直接用 manim 原生命令行渲染任一课程里的场景（场景类名见各文件）：
 
 ```bash
-uv run manim -pqh src/hello_manim/calculus/03.py SlopeIsDerivative
+uv run manim -pqh src/hello_manim/base/01.py FirstScene
 ```
 
-注意：原生命令行不走本项目的 `rendering.py`，输出会落在 manim 默认的
-`media/` 目录，而不是 `artifacts/`。
+注意：原生命令行不走本项目的 `rendering.py`，但根目录的 `manim.cfg` 会把
+输出同样指到 `artifacts/media/`；区别只在于它不做 `artifacts/videos/` 的归档整理。
 
 ## 目录约定
 
 ```
 src/hello_manim/
   __init__.py  # hello-manim 命令行入口：系列 + 编号 调度
-  rendering.py # 所有系列共用的渲染辅助（质量、产物目录、LaTeX 探测）
-  base/        # manim 基础 8 课
-  calculus/    # 高等数学专项 10 课
-  linalg/      # 线性代数专项 8 课
+  base/        # manim 基础 8 课（一课一文件）
+  calculus/    # 微积分专项（重构中，文案见 lesson_mind/calculus-mindmap.md）
+  linalg/      # 线性代数专项：一集一目录 episodeNN/（intro + act + main.py）
+  utils/       # 跨系列共用：渲染辅助、剧集拼接、旁白字幕、样式与小组件
+lesson_mind/   # 重构期的新版课程文案底稿（知识图谱）
 artifacts/
   media/     # manim 中间产物（partial movie files、LaTeX 缓存），删除即失去增量渲染
-  videos/    # 最终视频，按 系列/课 分目录：base/lesson01、calculus/lesson03 ...
+  videos/    # base 按系列/lessonNN/ 归档；linalg 成片为 系列/episodeNN.mp4，各幕片段在 episodeNN/segments/
 ```
 
 首次渲染 manim 会自建缓存，之后增量渲染很快；想彻底重渲就删掉
@@ -149,7 +172,8 @@ artifacts/
 
 ## 常见问题
 
-- **视频在哪？** `artifacts/videos/<系列>/lessonNN/` 下，文件名即场景类名。
+- **视频在哪？** 单场景课在 `artifacts/videos/<系列>/lessonNN/` 下，文件名即场景类名；
+  linalg 剧集的成片在 `artifacts/videos/linalg/episodeNN.mp4`，各幕片段在同目录 `segments/` 下。
 - **提示缺少 LaTeX？** 安装 MiKTeX 后重开终端再试；本项目也会自动探测
   MiKTeX 默认安装位置。首次编译公式 MiKTeX 可能补装宏包，允许即可。
 - **直接 `python` 运行课程文件时中文输出乱码？** 重定向到文件/管道时

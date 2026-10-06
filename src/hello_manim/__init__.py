@@ -13,6 +13,7 @@
 
 import sys
 from importlib import import_module
+from pathlib import Path
 
 # 系列 -> (展示名, 课程编号 -> 一句话简介)。
 # 编号是系列内的调度键；dict 在 Python 3.7+ 保持插入顺序，
@@ -31,32 +32,32 @@ SERIES: dict[str, tuple[str, dict[str, str]]] = {
             "08": "工程化：工厂、自定义动画与渲染配置",
         },
     ),
+    # 重构中：旧版 35 课已下线，新文案见 lesson_mind/calculus-mindmap.md，
+    # 课程文件随重构逐课补齐；在文件就位前调用会得到"尚未编写"提示。
     "calculus": (
-        "高等数学专项（大学完整课程，需要 LaTeX 环境）",
+        "微积分：把变化拆开与加回（重构中，知识图谱见 lesson_mind/calculus-mindmap.md）",
         {
-            "01": "函数与极限：数列极限、ε-N 语言与无穷小",
-            "02": "两个重要极限与函数的连续性",
-            "03": "导数：定义、几何意义与求导法则",
-            "04": "微分中值定理与导数的应用",
-            "05": "不定积分：原函数、换元法与分部积分",
-            "06": "定积分：黎曼和、牛顿-莱布尼茨公式与求积",
-            "07": "微分方程：可分离变量、一阶线性与二阶常系数",
-            "08": "多元函数微分学：偏导数、全微分与梯度",
-            "09": "二重积分：累次积分、极坐标与体积",
-            "10": "无穷级数：收敛判别、幂级数与泰勒展开",
+            "01": '从"靠近"开始——函数、极限与连续',
+            "02": "把变化放大——导数、微分与局部线性",
+            "03": "把变化累积回来——原函数、积分与面积",
+            "04": "让方程自己运动——常微分方程",
+            "05": "从平面走向空间——多元函数与局部结构",
+            "06": "沿着曲线和曲面走——向量分析",
+            "07": "用无限叠加逼近函数——级数与 Fourier 展开",
+            "08": "延伸——把微积分的语言继续推远",
         },
     ),
+    # 重构中：旧版 8 课已下线，新文案见 lesson_mind/linalg-mindmap.md，
+    # 课程文件随重构逐课补齐；在文件就位前调用会得到"尚未编写"提示。
     "linalg": (
-        "线性代数专项（大学完整课程，几何优先，需要 LaTeX 环境）",
+        "线性代数专项（重构中，知识图谱见 lesson_mind/linalg-mindmap.md）",
         {
-            "01": "向量：线性组合、张成空间与线性相关",
-            "02": "矩阵即线性变换：旋转、缩放与基",
-            "03": "矩阵乘法：变换的复合与顺序",
-            "04": "行列式：面积与体积的缩放因子",
-            "05": "逆矩阵、列空间与零空间：秩的几何意义",
-            "06": "线性方程组与高斯消元",
-            "07": "点积、叉积与正交化",
-            "08": "特征值与特征向量：变换的不变方向",
+            "01": "从线性方程组生长出来的行列式",
+            "02": "线性变换的本身——矩阵",
+            "03": "被变换的对象——向量",
+            "04": "线性方程组——从消元到结构",
+            "05": "特征值与特征向量——寻找变换的骨架",
+            "06": "二次型——把几何形状写成代数",
         },
     ),
 }
@@ -120,7 +121,21 @@ def main() -> None:
     # 课程文件名以数字开头（01.py），不是合法的 Python 标识符，
     # import 语句写不出来；import_module 接受字符串，绕过语法检查
     # 直接查找模块，这是加载"非标识符模块"的标准做法。
-    lesson = import_module(f"hello_manim.{series}.{number}")
+    # 新版专项课按"一集一目录"组织（linalg/episode01/ 等，一集成一条
+    # 视频），目录下自带 main()，调度时直接转交。
+    lesson_path = Path(__file__).parent / series / f"{number}.py"
+    episode_dir = Path(__file__).parent / series / f"episode{number}"
+    if episode_dir.is_dir():
+        lesson = import_module(f"hello_manim.{series}.episode{number}.main")
+    elif lesson_path.exists():
+        lesson = import_module(f"hello_manim.{series}.{number}")
+    else:
+        print(
+            f"hello-manim: 系列 '{series}' 的第 {number} 课尚未编写，"
+            f"课程规划见 lesson_mind/ 下对应的知识图谱",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
 
     # 课程内部的 argparse 应该只看到"属于自己的"参数：
     # 去掉 系列 + 课程编号，把程序名换成 "hello-manim calculus 03"，
