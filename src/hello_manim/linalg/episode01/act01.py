@@ -144,7 +144,8 @@ class Act01Birth(EpisodeScene):
         perm = MathTex(r"(1,2,3)", font_size=34, color=C_HL)
         perm.next_to(box, UP, buff=0.3)
         count = Text("3! = 6 项，符号由排列决定", font=FONT, font_size=26, color=C_TEXT)
-        count.to_edge(RIGHT, buff=0.7)
+        # 放到行列式整体下方：贴右边缘会压在负项那一行上。
+        count.next_to(det3, DOWN, buff=0.5)
         self.play(det3.animate.scale(0.92), Create(box), run_time=0.9)
         self.play(FadeIn(perm, shift=DOWN * 0.2), run_time=0.5)
         self.play(FadeIn(count, shift=LEFT * 0.3), run_time=0.7)

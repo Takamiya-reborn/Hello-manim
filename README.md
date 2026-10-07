@@ -51,21 +51,21 @@
 | 07  | 用无限叠加逼近函数——级数与 Fourier 展开 |
 | 08  | 延伸——把微积分的语言继续推远            |
 
-### linalg —— 线性代数专项（重构中：Episode01 已就位）
+### linalg —— 线性代数专项（重构中：Episode01–02 已就位）
 
 旧版 8 课已整体下线，新版按 [lesson_mind/linalg-mindmap.md](lesson_mind/linalg-mindmap.md)
 的 6 个 Episode 重建，叙事从"行列式在方程组里长出来"开始，而不是从定义开始。
 一集成一条视频：每集一个目录 `episodeNN/`（intro + act01..actNN + main.py），
 `main.py` 定义幕顺序，逐幕渲染后用 PyAV 无损拼接成单集 mp4：
 
-| 集  | 主题                             | 状态      |
-| --- | -------------------------------- | --------- |
-| 01  | 从线性方程组生长出来的行列式     | ✅ 已完成 |
-| 02  | 线性变换的本身——矩阵             | 待建      |
-| 03  | 被变换的对象——向量               | 待建      |
-| 04  | 线性方程组——从消元到结构         | 待建      |
-| 05  | 特征值与特征向量——寻找变换的骨架 | 待建      |
-| 06  | 二次型——把几何形状写成代数       | 待建      |
+| 章节 | 主题                             | 状态      |
+| ---- | -------------------------------- | --------- |
+| 01   | 从线性方程组生长出来的行列式     | ✅ 已完成 |
+| 02   | 线性变换的本身——矩阵             | ✅ 已完成 |
+| 03   | 被变换的对象——向量               | 待建      |
+| 04   | 线性方程组——从消元到结构         | 待建      |
+| 05   | 特征值与特征向量——寻找变换的骨架 | 待建      |
+| 06   | 二次型——把几何形状写成代数       | 待建      |
 
 学习路线建议：先把 base 01–08 读完建立 manim 世界观（静态物体 → 时间维 →
 数学表达 → 空间维 → 工程），再按需进入专项系列。专项课的注释里同时讲
@@ -111,7 +111,7 @@ uv run hello-manim linalg 1 --quality high
 # 只重渲其中一幕再重新拼接，其余片段沿用缓存
 uv run hello-manim linalg 1 --only act03
 
-# 线性代数第 2 课（尚未就位会得到提示）；编号可以简写，"2" 会自动补齐成 "02"
+# 线性代数 Episode 02：线性变换的本身——矩阵
 uv run hello-manim linalg 2
 
 # 只给编号、不给系列名时，默认属于 base 系列（向后兼容）
@@ -141,6 +141,7 @@ linalg 的剧集入口支持只重渲某一幕后重新拼接：
 
 ```bash
 uv run python -m hello_manim.linalg.episode01.main --quality high --only act03
+uv run python -m hello_manim.linalg.episode02.main --quality high --only act03
 ```
 
 也可以直接用 manim 原生命令行渲染任一课程里的场景（场景类名见各文件）：
@@ -179,5 +180,8 @@ artifacts/
 - **直接 `python` 运行课程文件时中文输出乱码？** 重定向到文件/管道时
   Windows 默认用 GBK 编码。`hello-manim` 入口已在开头统一成 UTF-8，
   优先用它；直接运行课程文件请在真实终端里看输出。
+- **`import manim` 报 UnicodeDecodeError（gbk codec）？** 旧版 `manim.cfg`
+  带中文注释，而 manim 用系统 locale（中文 Windows 下是 GBK）读取它。
+  现已把 `manim.cfg` 改成纯 ASCII 并在文件内留了警告——不要往里写中文。
 - **渲染报错说找不到 ffmpeg？** 说明装了老版本 manim。本项目的
   `manim>=0.19` 已内置 PyAV，`uv sync` 装出来的环境不会遇到。

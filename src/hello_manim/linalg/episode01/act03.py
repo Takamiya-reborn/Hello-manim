@@ -74,7 +74,7 @@ class Act03Geometry(EpisodeScene, ThreeDScene):
         # 两支箭头互换颜色与标签，面积数值翻成负值。
         det_neg = MathTex(r"\det = -3", font_size=40, color=C_NEG).move_to(det_lab_bg)
         swap_note = Text("面积不变 · 方向反转", font=FONT, font_size=26, color=C_NEG)
-        swap_note.next_to(det_lab_bg, DOWN, buff=0.5)
+        swap_note.next_to(det_lab_bg, DOWN, buff=0.5).align_to(det_lab_bg, RIGHT)
         self.play(Transform(det_lab_bg, det_neg), run_time=0.8)
         self.play(
             label_u.animate.move_to(label_v.get_center()).set_color(C_HL),
