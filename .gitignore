@@ -11,3 +11,7 @@ wheels/
 
 # manim 渲染产物（media/ 是增量缓存，删除后需全量重渲）
 artifacts/
+
+# playground 是读者自己的实验田，脚本不入库，只保留起手模板
+src/hello_manim/playground/*
+!src/hello_manim/playground/template.py

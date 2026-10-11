@@ -18,6 +18,20 @@
 
 </div>
 
+## 目录
+
+- [课程总览](#课程总览)
+  - [base —— manim 基础](#base--manim-基础库的使用方法)
+  - [calculus —— 微积分](#calculus--微积分把变化拆开与加回重构中文案已就绪)
+  - [linalg —— 线性代数专项](#linalg--线性代数专项重构中episode0102-已就位)
+- [环境准备](#环境准备)
+- [快速开始](#快速开始)
+  - [渲染参数](#渲染参数)
+  - [playground —— 自己动手写](#playground--自己动手写)
+  - [其他运行方式](#其他运行方式)
+- [目录约定](#目录约定)
+- [常见问题](#常见问题)
+
 ## 课程总览
 
 ### base —— manim 基础（库的使用方法）
@@ -116,6 +130,9 @@ uv run hello-manim linalg 2
 
 # 只给编号、不给系列名时，默认属于 base 系列（向后兼容）
 uv run hello-manim 01
+
+# playground：渲染自己在 playground/ 目录下写的场景（可省略 .py 后缀）
+uv run hello-manim play template --preview
 ```
 
 ### 渲染参数
@@ -128,6 +145,33 @@ uv run hello-manim 01
 | `--quality medium` | 720p30                                   |
 | `--quality high`   | 1080p60，成片用（linalg 剧集为 1080p30） |
 | `--preview`        | 渲染完成后用系统默认播放器打开视频       |
+
+### playground —— 自己动手写
+
+教程看懂了不算会，动手写一遍才算。[src/hello_manim/playground/](src/hello_manim/playground/)
+是留给你的空地：照 [template.py](src/hello_manim/playground/template.py) 的样子
+新建一个 `.py` 文件，在里面写自己的 `Scene` 子类，然后：
+
+```bash
+# 看看 playground 里现在有哪些脚本
+uv run hello-manim play
+
+# 渲染 playground/demo.py 里的全部场景（文件名不带 .py 也行）
+uv run hello-manim play demo
+
+# 渲染参数与正式课程共用：质量档位、渲完自动播放
+uv run hello-manim play demo --quality medium --preview
+```
+
+一个文件里写多个 `Scene` 子类，play 命令会把它们逐个渲出来。
+渲染结果按脚本名归档，和课程视频分开存放：
+
+```
+artifacts/videos/playground/<脚本名>/<场景类名>.mp4
+# 例如 playground/demo.py 里有 MyScene 和 AnotherScene：
+# artifacts/videos/playground/demo/MyScene.mp4
+# artifacts/videos/playground/demo/AnotherScene.mp4
+```
 
 ### 其他运行方式
 
@@ -161,6 +205,7 @@ src/hello_manim/
   base/        # manim 基础 8 课（一课一文件）
   calculus/    # 微积分专项（重构中，文案见 lesson_mind/calculus-mindmap.md）
   linalg/      # 线性代数专项：一集一目录 episodeNN/（intro + act + main.py）
+  playground/  # 读者自己写场景的地方，uv run hello-manim play <脚本名> 渲染
   utils/       # 跨系列共用：渲染辅助、剧集拼接、旁白字幕、样式与小组件
 lesson_mind/   # 重构期的新版课程文案底稿（知识图谱）
 artifacts/
@@ -174,7 +219,8 @@ artifacts/
 ## 常见问题
 
 - **视频在哪？** 单场景课在 `artifacts/videos/<系列>/lessonNN/` 下，文件名即场景类名；
-  linalg 剧集的成片在 `artifacts/videos/linalg/episodeNN.mp4`，各幕片段在同目录 `segments/` 下。
+  linalg 剧集的成片在 `artifacts/videos/linalg/episodeNN.mp4`，各幕片段在同目录 `segments/` 下；
+  playground 自己写的脚本渲在 `artifacts/videos/playground/<脚本名>/` 下。
 - **提示缺少 LaTeX？** 安装 MiKTeX 后重开终端再试；本项目也会自动探测
   MiKTeX 默认安装位置。首次编译公式 MiKTeX 可能补装宏包，允许即可。
 - **直接 `python` 运行课程文件时中文输出乱码？** 重定向到文件/管道时

@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import platform
 import shutil
@@ -92,6 +93,17 @@ def render_lesson(
     """按系列统一约定渲染一组场景，并把最终视频归档到 artifacts/videos/<系列>/。"""
     if needs_latex:
         require_latex()
+    out_dir = ARTIFACTS / "videos" / series / f"lesson{lesson_number}"
+    _render_scenes_to(out_dir, scene_classes, quality, preview)
+
+
+def _render_scenes_to(
+    out_dir: Path,
+    scene_classes: Sequence[type[Scene]],
+    quality: str,
+    preview: bool,
+) -> None:
+    """把一组场景渲到 out_dir，是所有入口共享的最后一公里。"""
     # media_dir 是 manim 所有中间产物（partial movie files、LaTeX 缓存）
     # 的根目录。统一收进 artifacts/ 后，缓存在多次渲染之间可以复用。
     config.media_dir = str(ARTIFACTS / "media")
@@ -112,7 +124,6 @@ def render_lesson(
 
         # 中间产物留在 artifacts/media（供缓存复用），最终视频复制到
         # 按 系列/课 分类目录，查找时不用在 media 的层级里翻。
-        out_dir = ARTIFACTS / "videos" / series / f"lesson{lesson_number}"
         out_dir.mkdir(parents=True, exist_ok=True)
         target = out_dir / movie.name
         shutil.copyfile(movie, target)
@@ -120,6 +131,74 @@ def render_lesson(
 
         if preview:
             _open_with_default_player(target)
+
+
+# playground 是留给读者自己写场景的目录。脚本不是课程，没有固定编号，
+# 因此单独走一条"按文件名调度"的入口，产物按脚本名而不是 lessonNN 归档。
+PLAYGROUND_DIR = Path(__file__).resolve().parent.parent / "playground"
+
+
+def list_playground_scripts() -> list[str]:
+    """列出 playground/ 下所有可渲染的脚本名（不含 .py 后缀）。"""
+    if not PLAYGROUND_DIR.is_dir():
+        return []
+    return sorted(
+        path.stem for path in PLAYGROUND_DIR.glob("*.py") if path.name != "__init__.py"
+    )
+
+
+def render_playground_file(
+    script: str,
+    quality: str = "low",
+    preview: bool = False,
+) -> None:
+    """渲染 playground/<script>.py 里定义的全部场景，视频归档到
+    artifacts/videos/playground/<script>/（文件名可带或不带 .py 后缀）。"""
+    path = PLAYGROUND_DIR / script
+    if path.suffix != ".py":
+        path = path.with_name(path.name + ".py")
+    # 只允许 playground/ 下的文件，防止 "../xxx" 之类路径跑到目录外面。
+    if path.parent != PLAYGROUND_DIR or not path.is_file():
+        available = ", ".join(list_playground_scripts()) or "（还没有）"
+        print(
+            f"playground 里找不到脚本 '{script}'，现有的有: {available}\n"
+            f"在 {PLAYGROUND_DIR} 下新建一个 .py 文件（可参考 template.py），"
+            "写好 Scene 子类后就能渲染",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    # 脚本名不一定是合法标识符（比如 "01-demo.py"），
+    # 所以不走 import_module，用 spec 按文件路径加载。
+    spec = importlib.util.spec_from_file_location(f"playground_{path.stem}", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    # 只取"本文件里定义的" Scene 子类：从 manim import * 进来的
+    # Scene 本身、以及文件里 import 的其他场景类都要排除掉。
+    scene_classes = [
+        obj
+        for obj in vars(module).values()
+        if isinstance(obj, type)
+        and issubclass(obj, Scene)
+        and obj.__module__ == module.__name__
+    ]
+    if not scene_classes:
+        print(
+            f"'{path.name}' 里没有定义 Scene 子类。照 template.py 的样子写一个："
+            "class MyScene(Scene) 加 construct() 方法，就可以渲染了",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+
+    print(f"在 {path.name} 中找到 {len(scene_classes)} 个场景，开始渲染……")
+    _render_scenes_to(
+        ARTIFACTS / "videos" / "playground" / path.stem,
+        scene_classes,
+        quality,
+        preview,
+    )
 
 
 def _open_with_default_player(path: Path) -> None:

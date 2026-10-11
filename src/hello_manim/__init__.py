@@ -5,15 +5,24 @@
     uv run hello-manim calculus 03          # 高等数学第 3 课
     uv run hello-manim linalg 02 --quality medium
     uv run hello-manim 01                   # 只给编号时默认 base 系列
+    uv run hello-manim play                 # 列出 playground 里自己的脚本
+    uv run hello-manim play demo            # 渲染 playground/demo.py
     uv run hello-manim                      # 打印课程列表
 
 每课文件仍然可以独立运行（uv run python src/hello_manim/base/01.py），
 因为每课自带 if __name__ == "__main__" 块——两种入口共用同一个 main()。
 """
 
+import argparse
 import sys
 from importlib import import_module
 from pathlib import Path
+
+from hello_manim.utils.rendering import (
+    add_render_args,
+    list_playground_scripts,
+    render_playground_file,
+)
 
 # 系列 -> (展示名, 课程编号 -> 一句话简介)。
 # 编号是系列内的调度键；dict 在 Python 3.7+ 保持插入顺序，
@@ -67,6 +76,36 @@ SERIES_ALIASES: dict[str, str] = {"linear_algebra": "linalg", "la": "linalg"}
 DEFAULT_SERIES = "base"
 
 
+def _run_playground(argv: list[str]) -> None:
+    """处理 `hello-manim play [脚本名]`：无脚本名时列出 playground 现有脚本。"""
+    parser = argparse.ArgumentParser(
+        prog="hello-manim play",
+        description="渲染 playground/ 目录下自己写的 manim 场景",
+    )
+    parser.add_argument(
+        "script",
+        nargs="?",
+        help="playground/ 下的脚本名（可省略 .py 后缀）；缺省时列出全部脚本",
+    )
+    add_render_args(parser)
+    args = parser.parse_args(argv)
+
+    if args.script is None:
+        scripts = list_playground_scripts()
+        if scripts:
+            print("playground 里现有的脚本（uv run hello-manim play <名字> 渲染）：")
+            for name in scripts:
+                print(f"  {name}")
+        else:
+            print(
+                "playground/ 里还没有脚本。新建一个 .py 文件（可参考 template.py），"
+                "写好 Scene 子类后用 uv run hello-manim play <名字> 渲染"
+            )
+        return
+
+    render_playground_file(args.script, quality=args.quality, preview=args.preview)
+
+
 def main() -> None:
     # Windows 中文系统下，输出重定向到管道/文件时 Python 默认用 GBK，
     # 而 manim 的 logger 向 stderr 写 UTF-8，两种编码混流必然乱码。
@@ -79,6 +118,7 @@ def main() -> None:
 
     if not argv or argv[0] in ("-h", "--help"):
         print("用法: hello-manim [系列] <课程编号> [--quality ...] [--preview]")
+        print("      hello-manim play [脚本名]   # 渲染 playground/ 里自己的脚本")
         print()
         for name, (title, lessons) in SERIES.items():
             print(f"[{name}] {title}")
@@ -91,6 +131,13 @@ def main() -> None:
     # 第一个参数是系列名还是编号？编号是纯数字，系列名不是——
     # 因此 "01" 走默认系列 base，"calculus 03" 显式指定系列。
     first = argv[0].lower()
+
+    # playground 不是课程系列，没有编号可言：play 后面跟的是
+    # playground/ 目录下的脚本名（不带 .py 也行）。
+    if first in ("play", "playground"):
+        _run_playground(argv[1:])
+        return
+
     if first.isdigit():
         series, argv = DEFAULT_SERIES, argv
     elif first in SERIES:
